@@ -2,7 +2,7 @@
   <div class="app">
     <!-- When you paste the function download() instead downloadJSON(), app get request at Pixlpark server-->
     <button class="download" @click="downloadJSON()" :class="{ none: isInvis }">
-      Загрузить данные
+      Загрузить данные заказов
     </button>
     <section class="content">
       <article class="item" v-for="order in orders" :key="order.Id">
@@ -20,7 +20,7 @@
             Статус оплаты: Не оплачен
           </p>
         </div>
-         <p class="item__subheader">Данные об адресе доставки и получателе</p>
+        <p class="item__subheader">Данные об адресе доставки и получателе</p>
         <!-- I use more one directive v-for with v-if cuz template somehow can't see fields of the object inside the object and get Error in render: "TypeError: Cannot read property 'FullName' of null". -->
         <div
           class="item__delivery"
@@ -35,7 +35,9 @@
           </p>
           <p
             class="item__customer-phone"
-            v-if="item == order.DeliveryAddress.Phone"
+            v-if="
+              item == order.DeliveryAddress.Phone && item != '' && item != null
+            "
           >
             Номер заказчика: {{ order.DeliveryAddress.Phone }}
           </p>
@@ -55,23 +57,21 @@
               v-if="item == order.DeliveryAddress.AddressLine1"
               >{{ order.DeliveryAddress.AddressLine1 }}</span
             >
-            <span class="item__zip" v-if="item == order.DeliveryAddress.ZipCode && item != '' "
-              >Адрес доставки: {{ order.DeliveryAddress.ZipCode }}</span
+            <span
+              class="item__zip"
+              v-if="item == order.DeliveryAddress.ZipCode && item != ''"
+              >{{ order.DeliveryAddress.ZipCode }}</span
             >
           </p>
         </div>
-         <p class="item__subheader">Данные о типе доставки</p>
-        <div
-          class="item__shipping"
-          v-for="item in order.Shipping"
-          :key="item"
-        >
+        <p class="item__subheader">Данные о типе доставки</p>
+        <div class="item__shipping" v-for="item in order.Shipping" :key="item">
           <p class="item__shipping-type" v-if="item == order.Shipping.Title">
-             {{ order.Shipping.Title }}
+            {{ order.Shipping.Title }}
           </p>
           <p
             class="item__shipping-phone"
-            v-if="item == order.Shipping.Phone && item != null"
+            v-if="item == order.Shipping.Phone && item != null && item != '0'"
           >
             Номер: {{ order.Shipping.Phone }}
           </p>
@@ -648,49 +648,80 @@ export default {
 </script>
 
 <style lang="scss">
-.app  {
-  
+* {
+  font: 20px Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: rgb(66, 66, 66);
+}
+body {
+  background: rgb(240, 240, 240);
+}
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .download {
-  text-align: center;
+  border-radius: 10px;
+  padding: 1%;
+  cursor: pointer;
 }
 .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 .item {
-}
-.item__header {
-}
-.item__img {
-}
-.item__statuses {
-}
-.item__status {
-}
-.item__paid-status {
-}
-.item__subheader {
-}
-.item__delivery {
-}
-.item__customer-name {
-}
-.item__customer-phone {
-}
-.item__address {
-}
-.item__country {
-}
-.item__city {
-}
-.item__street {
-}
-.item__zip {
-}
-.item__shipping {
-}
-.item__shipping-type {
-}
-.item__shipping-phone {
+  margin: 3%;
+  padding: 3%;
+  background: white;
+  box-shadow: 0px 0px 10px 1px #c0d3db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: baseline;
+  border-radius: 15px;
+  &__header {
+    font-weight: bold;
+    font-size: 23px;
+    color: #000;
+    text-align: center;
+  }
+  &__img {
+    max-width: 200px;
+  }
+  &__statuses {
+  }
+  &__status {
+  }
+  &__paid-status {
+  }
+  &__subheader {
+    font-weight: bold;
+    text-align: center;
+    margin: 2% 0;
+  }
+  &__delivery {
+  }
+  &__customer-name {
+  }
+  &__customer-phone {
+  }
+  &__address {
+  }
+  &__country {
+  }
+  &__city {
+  }
+  &__street {
+  }
+  &__zip {
+  }
+  &__shipping {
+  }
+  &__shipping-type {
+  }
+  &__shipping-phone {
+  }
 }
 .none {
   display: none;
